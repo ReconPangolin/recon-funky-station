@@ -30,4 +30,5 @@
     - id: NetProbeCartridge
     - id: NanoChatCartridge
     - id: MailMetricsCartridge
+    - id: PlantAnalyzerCartridge #Funkystation
 

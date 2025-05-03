@@ -24,6 +24,9 @@ astro-nav-program-name = AstroNav
 
 med-tek-program-name = MedTek
 
+plant-analyzer-program-name = Plant Analyzer
+
+
 # Wanted list cartridge
 wanted-list-program-name = Wanted list
 wanted-list-label-no-records = It's all right, cowboy

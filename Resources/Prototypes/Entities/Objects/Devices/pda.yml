@@ -296,6 +296,14 @@
     accentVColor: "#00cc35"
   - type: Icon
     state: pda-hydro
+  - type: CartridgeLoader
+    uiKey: enum.PdaUiKey.Key
+    preinstalled:
+    - CrewManifestCartridge
+    - NotekeeperCartridge
+    - NewsReaderCartridge
+    - PlantAnalyzerCartridge #Funkystation
+    - NanoChatCartridge # DeltaV
 
 - type: entity
   parent: BasePDA
