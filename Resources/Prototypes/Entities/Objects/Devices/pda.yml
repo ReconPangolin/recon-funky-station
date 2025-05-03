@@ -105,6 +105,8 @@
         type: InstrumentBoundUserInterface
       enum.HealthAnalyzerUiKey.Key:
         type: HealthAnalyzerBoundUserInterface
+      enum.ReconPlantAnalyzerUiKey.Key:
+        type: ReconPlantAnalyzerBoundUserInterface
   - type: Tag
     tags:
     - DoorBumpOpener

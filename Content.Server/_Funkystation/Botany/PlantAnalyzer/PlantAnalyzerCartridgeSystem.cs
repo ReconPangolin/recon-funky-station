@@ -2,7 +2,7 @@
 using Content.Server.CartridgeLoader;
 using Content.Shared.CartridgeLoader;
 
-namespace Content.Server._Funkystation.Botany;
+namespace Content.Server._Funkystation.Botany.PlantAnalyzer;
 
 public sealed class PlantAnalyzerCartridgeSystem : EntitySystem
 {
@@ -18,7 +18,7 @@ public sealed class PlantAnalyzerCartridgeSystem : EntitySystem
 
     private void OnCartridgeAdded(Entity<PlantAnalyzerCartridgeComponent> ent, ref CartridgeAddedEvent args)
     {
-        EnsureComp<PlantAnalyzerComponent>(args.Loader);
+        EnsureComp<ReconPlantAnalyzerComponent>(args.Loader);
     }
 
     private void OnCartridgeRemoved(Entity<PlantAnalyzerCartridgeComponent> ent, ref CartridgeRemovedEvent args)
@@ -26,7 +26,7 @@ public sealed class PlantAnalyzerCartridgeSystem : EntitySystem
         // only remove when the program itself is removed
         if (!_cartridgeLoaderSystem.HasProgram<PlantAnalyzerCartridgeComponent>(args.Loader))
         {
-            RemComp<PlantAnalyzerComponent>(args.Loader);
+            RemComp<ReconPlantAnalyzerComponent>(args.Loader);
         }
     }
 }
