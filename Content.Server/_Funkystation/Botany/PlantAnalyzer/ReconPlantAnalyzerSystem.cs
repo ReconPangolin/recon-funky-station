@@ -167,26 +167,19 @@ public sealed class ReconPlantAnalyzerSystem : EntitySystem
     /// Send an update for the target to the healthAnalyzer
     /// </summary>
     /// <param name="plantAnalyzer">The health analyzer</param>
-    /// <param name="target">The entity being scanned</param>
+    /// <param name="plantHolder">The entity being scanned</param>
     /// <param name="scanMode">True makes the UI show ACTIVE, False makes the UI show INACTIVE</param>
-    public void UpdateScannedUser(EntityUid plantAnalyzer, EntityUid target, bool scanMode)
+    public void UpdateScannedUser(EntityUid plantAnalyzer, EntityUid plantHolder, bool scanMode)
     {
         if (!_uiSystem.HasUi(plantAnalyzer, ReconPlantAnalyzerUiKey.Key))
             return;
 
-
-        var bodyTemperature = float.NaN;
-        var bloodAmount = float.NaN;
-        var bleeding = false;
-        var unrevivable = false;
-
-
         _uiSystem.ServerSendUiMessage(plantAnalyzer, ReconPlantAnalyzerUiKey.Key, new PlantAnalyzerUserMessage(
-            GetNetEntity(target),
-            bodyTemperature,
-            bloodAmount,
-            scanMode,
-            bleeding,
-            unrevivable));
+            GetNetEntity(plantHolder),
+            1,
+            3,
+            6,
+            3,
+            "Apple"));
     }
 }

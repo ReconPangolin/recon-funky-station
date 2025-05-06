@@ -52,197 +52,37 @@ namespace Content.Client._Funkystation.Botany.UI
         {
             var target = _entityManager.GetEntity(msg.TargetEntity);
 
-            if (target == null
-                || !_entityManager.TryGetComponent<DamageableComponent>(target, out var damageable))
+            if (target == null)
             {
-                NoPatientDataText.Visible = true;
+                SpriteView.Visible = false;
+
+                NoDataTexture.Visible = true;
+
+                NoPlantDataText.Visible = true;
                 return;
             }
 
-            NoPatientDataText.Visible = false;
-
-            // Scan Mode
-
-            ScanModeLabel.Text = msg.ScanMode.HasValue
-                ? msg.ScanMode.Value
-                    ? Loc.GetString("health-analyzer-window-scan-mode-active")
-                    : Loc.GetString("health-analyzer-window-scan-mode-inactive")
-                : Loc.GetString("health-analyzer-window-entity-unknown-text");
-
-            ScanModeLabel.FontColorOverride = msg.ScanMode.HasValue && msg.ScanMode.Value ? Color.Green : Color.Red;
-
-            // Patient Information
-
             SpriteView.SetEntity(target.Value);
-            SpriteView.Visible = msg.ScanMode.HasValue && msg.ScanMode.Value;
-            NoDataTex.Visible = !SpriteView.Visible;
+            SpriteView.Visible = true;
+
+            NoDataTexture.Visible = false;
+
+            NoPlantDataText.Visible = false;
+
+
+            YieldLabel.Text = $"{msg.Yield} crops per harvest";
+
+            ProductionLabel.Text = $"{msg.Production} minutes";
+
+            MaturationLabel.Text = $"{msg.Maturation} minutes";
+
 
             var name = new FormattedMessage();
             name.PushColor(Color.White);
-            name.AddText(_entityManager.HasComponent<MetaDataComponent>(target.Value)
-                ? Identity.Name(target.Value, _entityManager)
-                : Loc.GetString("health-analyzer-window-entity-unknown-text"));
-            NameLabel.SetMessage(name);
+            name.AddText(msg.PlantName);
+            PlantNameLabel.SetMessage(name);
 
-            SpeciesLabel.Text =
-                _entityManager.TryGetComponent<HumanoidAppearanceComponent>(target.Value,
-                    out var humanoidAppearanceComponent)
-                    ? Loc.GetString(_prototypes.Index<SpeciesPrototype>(humanoidAppearanceComponent.Species).Name)
-                    : Loc.GetString("health-analyzer-window-entity-unknown-species-text");
-
-            // Basic Diagnostic
-
-            TemperatureLabel.Text = !float.IsNaN(msg.Temperature)
-                ? $"{msg.Temperature - Atmospherics.T0C:F1} °C ({msg.Temperature:F1} K)"
-                : Loc.GetString("health-analyzer-window-entity-unknown-value-text");
-
-            BloodLabel.Text = !float.IsNaN(msg.BloodLevel)
-                ? $"{msg.BloodLevel * 100:F1} %"
-                : Loc.GetString("health-analyzer-window-entity-unknown-value-text");
-
-            StatusLabel.Text =
-                _entityManager.TryGetComponent<MobStateComponent>(target.Value, out var mobStateComponent)
-                    ? GetStatus(mobStateComponent.CurrentState)
-                    : Loc.GetString("health-analyzer-window-entity-unknown-text");
-
-            // Total Damage
-
-            DamageLabel.Text = damageable.TotalDamage.ToString();
-
-            // Alerts
-
-            var showAlerts = msg.Unrevivable == true || msg.Bleeding == true;
-
-            AlertsDivider.Visible = showAlerts;
-            AlertsContainer.Visible = showAlerts;
-
-            if (showAlerts)
-                AlertsContainer.DisposeAllChildren();
-
-            if (msg.Unrevivable == true)
-                AlertsContainer.AddChild(new RichTextLabel
-                {
-                    Text = Loc.GetString("health-analyzer-window-entity-unrevivable-text"),
-                    Margin = new Thickness(0, 4),
-                    MaxWidth = 300
-                });
-
-            if (msg.Bleeding == true)
-                AlertsContainer.AddChild(new RichTextLabel
-                {
-                    Text = Loc.GetString("health-analyzer-window-entity-bleeding-text"),
-                    Margin = new Thickness(0, 4),
-                    MaxWidth = 300
-                });
-
-            // Damage Groups
-
-            var damageSortedGroups =
-                damageable.DamagePerGroup.OrderByDescending(damage => damage.Value)
-                    .ToDictionary(x => x.Key, x => x.Value);
-
-            IReadOnlyDictionary<string, FixedPoint2> damagePerType = damageable.Damage.DamageDict;
-
-            DrawDiagnosticGroups(damageSortedGroups, damagePerType);
         }
 
-        private static string GetStatus(MobState mobState)
-        {
-            return mobState switch
-            {
-                MobState.Alive => Loc.GetString("health-analyzer-window-entity-alive-text"),
-                MobState.Critical => Loc.GetString("health-analyzer-window-entity-critical-text"),
-                MobState.Dead => Loc.GetString("health-analyzer-window-entity-dead-text"),
-                _ => Loc.GetString("health-analyzer-window-entity-unknown-text"),
-            };
-        }
-
-        private void DrawDiagnosticGroups(
-            Dictionary<string, FixedPoint2> groups,
-            IReadOnlyDictionary<string, FixedPoint2> damageDict)
-        {
-            GroupsContainer.RemoveAllChildren();
-
-            foreach (var (damageGroupId, damageAmount) in groups)
-            {
-                if (damageAmount == 0)
-                    continue;
-
-                var groupTitleText = $"{Loc.GetString(
-                    "health-analyzer-window-damage-group-text",
-                    ("damageGroup", _prototypes.Index<DamageGroupPrototype>(damageGroupId).LocalizedName),
-                    ("amount", damageAmount)
-                )}";
-
-                var groupContainer = new BoxContainer
-                {
-                    Align = BoxContainer.AlignMode.Begin,
-                    Orientation = BoxContainer.LayoutOrientation.Vertical,
-                };
-
-                groupContainer.AddChild(CreateDiagnosticGroupTitle(groupTitleText, damageGroupId));
-
-                GroupsContainer.AddChild(groupContainer);
-
-                // Show the damage for each type in that group.
-                var group = _prototypes.Index<DamageGroupPrototype>(damageGroupId);
-
-                foreach (var type in group.DamageTypes)
-                {
-                    if (!damageDict.TryGetValue(type, out var typeAmount) || typeAmount <= 0)
-                        continue;
-
-                    var damageString = Loc.GetString(
-                        "health-analyzer-window-damage-type-text",
-                        ("damageType", _prototypes.Index<DamageTypePrototype>(type).LocalizedName),
-                        ("amount", typeAmount)
-                    );
-
-                    groupContainer.AddChild(CreateDiagnosticItemLabel(damageString.Insert(0, " · ")));
-                }
-            }
-        }
-
-        private Texture GetTexture(string texture)
-        {
-            var rsiPath = new ResPath("/Textures/Objects/Devices/health_analyzer.rsi");
-            var rsiSprite = new SpriteSpecifier.Rsi(rsiPath, texture);
-
-            var rsi = _cache.GetResource<RSIResource>(rsiSprite.RsiPath).RSI;
-            if (!rsi.TryGetState(rsiSprite.RsiState, out var state))
-            {
-                rsiSprite = new SpriteSpecifier.Rsi(rsiPath, "unknown");
-            }
-
-            return _spriteSystem.Frame0(rsiSprite);
-        }
-
-        private static Label CreateDiagnosticItemLabel(string text)
-        {
-            return new Label
-            {
-                Text = text,
-            };
-        }
-
-        private BoxContainer CreateDiagnosticGroupTitle(string text, string id)
-        {
-            var rootContainer = new BoxContainer
-            {
-                Margin = new Thickness(0, 6, 0, 0),
-                VerticalAlignment = VAlignment.Bottom,
-                Orientation = BoxContainer.LayoutOrientation.Horizontal,
-            };
-
-            rootContainer.AddChild(new TextureRect
-            {
-                SetSize = new Vector2(30, 30),
-                Texture = GetTexture(id.ToLower())
-            });
-
-            rootContainer.AddChild(CreateDiagnosticItemLabel(text));
-
-            return rootContainer;
-        }
     }
 }
