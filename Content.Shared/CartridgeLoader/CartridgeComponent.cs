@@ -19,6 +19,12 @@ public sealed partial class CartridgeComponent : Component
     [DataField]
     public SpriteSpecifier? Icon;
 
+    [DataField]
+    public int Version = 1;
+
+    [DataField(required: true)]
+    public string ProgramType;
+
     [AutoNetworkedField]
     public InstallationStatus InstallationStatus = InstallationStatus.Cartridge;
 }

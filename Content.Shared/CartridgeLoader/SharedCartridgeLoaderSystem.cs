@@ -59,10 +59,12 @@ public abstract class SharedCartridgeLoaderSystem : EntitySystem
 public sealed class CartridgeAddedEvent : EntityEventArgs
 {
     public readonly EntityUid Loader;
+    public readonly int? Version;
 
-    public CartridgeAddedEvent(EntityUid loader)
+    public CartridgeAddedEvent(EntityUid loader, int? version)
     {
         Loader = loader;
+        Version = version;
     }
 }
 

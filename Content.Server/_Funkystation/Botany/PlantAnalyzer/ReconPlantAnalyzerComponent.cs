@@ -10,7 +10,7 @@ namespace Content.Server._Funkystation.Botany.PlantAnalyzer;
 /// Requires <c>ItemToggleComponent</c>.
 /// </remarks>
 [RegisterComponent, AutoGenerateComponentPause]
-[Access(typeof(ReconPlantAnalyzerSystem))]
+[Access(typeof(ReconPlantAnalyzerSystem),  typeof(PlantAnalyzerCartridgeSystem))]
 public sealed partial class ReconPlantAnalyzerComponent : Component
 {
     /// <summary>
@@ -61,4 +61,8 @@ public sealed partial class ReconPlantAnalyzerComponent : Component
     /// </summary>
     [DataField]
     public bool Silent;
+
+    [DataField]
+    public int Version = 1;
+
 }

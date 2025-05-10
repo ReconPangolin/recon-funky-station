@@ -15,6 +15,7 @@
   - type: MailMetricsCartridge
   - type: Cartridge
     programName: mail-metrics-program-name
+    programType: MailMetrics
     icon:
       sprite: Nyanotrasen/Objects/Specific/Mail/mail.rsi
       state: icon
@@ -36,6 +37,7 @@
   - type: NanoChatCartridge
   - type: Cartridge
     programName: nano-chat-program-name
+    programType: NanoChat
     icon:
       sprite: _DV/Misc/program_icons.rsi
       state: nanochat

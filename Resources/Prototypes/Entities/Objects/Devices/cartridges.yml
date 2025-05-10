@@ -11,6 +11,7 @@
     ui: !type:NotekeeperUi
   - type: Cartridge
     programName: notekeeper-program-name
+    programType: Notekeeper
     icon:
       sprite:  Objects/Misc/books.rsi
       state: book_icon
@@ -32,6 +33,7 @@
     ui: !type:NewsReaderUi
   - type: Cartridge
     programName: news-read-program-name
+    programType: NewsReader
     icon:
       sprite: Interface/Misc/program_icons.rsi
       state: news_read
@@ -53,6 +55,7 @@
       ui: !type:CrewManifestUi
     - type: Cartridge
       programName: crew-manifest-program-name
+      programType: CrewManifest
       icon:
         sprite: Interface/Misc/program_icons.rsi
         state: crew_manifest
@@ -74,6 +77,7 @@
       ui: !type:NetProbeUi
     - type: Cartridge
       programName: net-probe-program-name
+      programType: NetProbe
       icon:
         sprite: Structures/Machines/server.rsi
         state: server
@@ -98,6 +102,7 @@
       ui: !type:LogProbeUi
     - type: Cartridge
       programName: log-probe-program-name
+      programType: LogProbe
       icon:
         sprite: Structures/Doors/Airlocks/Standard/security.rsi
         state: closed
@@ -125,6 +130,7 @@
     ui: !type:WantedListUi
   - type: Cartridge
     programName: wanted-list-program-name
+    programType: WantedList
     icon:
       sprite: Objects/Misc/books.rsi
       state: icon_magnifier
@@ -149,32 +155,11 @@
       state: cart-med
     - type: Cartridge
       programName: med-tek-program-name
+      programType: MedTek
       icon:
         sprite: Objects/Specific/Medical/healthanalyzer.rsi
         state: icon
     - type: MedTekCartridge
-    - type: Tag
-      tags:
-      - PDACart
-
-- type: entity
-  parent: BaseItem
-  id: PlantAnalyzerCartridge
-  name: Plant analyzer cartridge
-  description: A program that scans plant data.
-  components:
-    - type: Sprite
-      sprite: Objects/Devices/cartridge.rsi
-      state: cart-b
-    - type: Icon
-      sprite: Objects/Devices/cartridge.rsi
-      state: cart-b
-    - type: Cartridge
-      programName: plant-analyzer-program-name
-      icon:
-        sprite: _NF/Objects/Devices/plant_analyzer.rsi
-        state: icon
-    - type: PlantAnalyzerCartridge
     - type: Tag
       tags:
       - PDACart
@@ -193,6 +178,7 @@
       state: cart-nav
     - type: Cartridge
       programName: astro-nav-program-name
+      programType: AstroNav
       icon:
         sprite: Objects/Devices/gps.rsi
         state: icon
@@ -200,3 +186,47 @@
     - type: Tag
       tags:
       - PDACart
+
+- type: entity
+  parent: BaseItem
+  id: BasePlantAnalyzerCartridge
+  abstract: true
+  components:
+  - type: Sprite
+    sprite: Objects/Devices/cartridge.rsi
+    state: cart-b
+  - type: Icon
+    sprite: Objects/Devices/cartridge.rsi
+    state: cart-b
+  - type: PlantAnalyzerCartridge
+  - type: Tag
+    tags:
+    - PDACart
+
+- type: entity
+  parent: BasePlantAnalyzerCartridge
+  id: PlantAnalyzerCartridgeV1
+  name: Plant analyzer cartridge V1
+  description: A program that scans plant data V1.
+  components:
+  - type: Cartridge
+    programName: plant-analyzer-program-name
+    programType: PlantAnalyzer
+    icon:
+      sprite: _NF/Objects/Devices/plant_analyzer.rsi
+      state: icon
+    version: 1
+
+- type: entity
+  parent: BasePlantAnalyzerCartridge
+  id: PlantAnalyzerCartridgeV2
+  name: Plant analyzer cartridge V2
+  description: A program that scans plant data V2.
+  components:
+  - type: Cartridge
+    programName: plant-analyzer-program-name
+    programType: PlantAnalyzer
+    icon:
+      sprite: _NF/Objects/Devices/plant_analyzer.rsi
+      state: icon
+    version: 2

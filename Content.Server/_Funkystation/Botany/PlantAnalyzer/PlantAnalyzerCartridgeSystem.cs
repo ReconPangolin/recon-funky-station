@@ -18,7 +18,27 @@ public sealed class PlantAnalyzerCartridgeSystem : EntitySystem
 
     private void OnCartridgeAdded(Entity<PlantAnalyzerCartridgeComponent> ent, ref CartridgeAddedEvent args)
     {
-        EnsureComp<ReconPlantAnalyzerComponent>(args.Loader);
+        var plantAnalyzer = EnsureComp<ReconPlantAnalyzerComponent>(args.Loader);
+
+        var version = args.Version;
+
+        switch (version)
+        {
+            case 2:
+                plantAnalyzer.Version = 2;
+                plantAnalyzer.ScanDelay = TimeSpan.FromSeconds(1);
+                break;
+            case 3:
+                plantAnalyzer.Version = 3;
+                plantAnalyzer.ScanDelay = TimeSpan.FromSeconds(0.1);
+                break;
+            default:
+                plantAnalyzer.Version = 1;
+                plantAnalyzer.ScanDelay = TimeSpan.FromSeconds(5);
+                break;
+        }
+
+
     }
 
     private void OnCartridgeRemoved(Entity<PlantAnalyzerCartridgeComponent> ent, ref CartridgeRemovedEvent args)

@@ -215,7 +215,7 @@ public sealed class CartridgeLoaderSystem : SharedCartridgeLoaderSystem
         UpdateCartridgeInstallationStatus(installedProgram, deinstallable ? InstallationStatus.Installed : InstallationStatus.Readonly, cartridge);
         cartridge.LoaderUid = loaderUid;
 
-        RaiseLocalEvent(installedProgram, new CartridgeAddedEvent(loaderUid));
+        RaiseLocalEvent(installedProgram, new CartridgeAddedEvent(loaderUid, cartridge.Version));
         UpdateUserInterfaceState(loaderUid, loader);
         return true;
     }
@@ -343,7 +343,9 @@ public sealed class CartridgeLoaderSystem : SharedCartridgeLoaderSystem
         if (TryComp(args.Entity, out CartridgeComponent? cartridge))
             cartridge.LoaderUid = uid;
 
-        RaiseLocalEvent(args.Entity, new CartridgeAddedEvent(uid));
+        var version = cartridge?.Version;
+
+        RaiseLocalEvent(args.Entity, new CartridgeAddedEvent(uid, version));
         base.OnItemInserted(uid, loader, args);
     }
 
