@@ -12,6 +12,7 @@ using Robust.Shared.Containers;
 using Robust.Shared.Timing;
 
 using Content.Shared._Funkystation.Botany.PlantAnalyzer;
+using Content.Server.Botany;
 
 
 namespace Content.Server._Funkystation.Botany.PlantAnalyzer;
@@ -174,12 +175,31 @@ public sealed class ReconPlantAnalyzerSystem : EntitySystem
         if (!_uiSystem.HasUi(plantAnalyzer, ReconPlantAnalyzerUiKey.Key))
             return;
 
+
+        SeedData? seed = null;
+        if (TryComp<PlantHolderComponent>(plantHolder, out var plantHolderComp))
+            seed = plantHolderComp.Seed;
+            if (seed != null)
+            {
+                _uiSystem.ServerSendUiMessage(plantAnalyzer, ReconPlantAnalyzerUiKey.Key, new PlantAnalyzerUserMessage(
+                    GetNetEntity(plantHolder),
+                    1,
+                    seed.Production,
+                    seed.Maturation,
+                    seed.Yield,
+                    seed.Potency,
+                    seed.DisplayName));
+                return;
+            }
+
         _uiSystem.ServerSendUiMessage(plantAnalyzer, ReconPlantAnalyzerUiKey.Key, new PlantAnalyzerUserMessage(
             GetNetEntity(plantHolder),
             1,
-            3,
-            6,
-            3,
-            "Apple"));
+            1,
+            1,
+            1,
+            1,
+            "No plant"));
+
     }
 }

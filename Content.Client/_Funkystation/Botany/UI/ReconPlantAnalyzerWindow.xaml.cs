@@ -70,11 +70,16 @@ namespace Content.Client._Funkystation.Botany.UI
             NoPlantDataText.Visible = false;
 
 
-            YieldLabel.Text = $"{msg.Yield} crops per harvest";
+            YieldLabel.Text = $"{msg.Yield} produce";
 
             ProductionLabel.Text = $"{msg.Production} minutes";
 
             MaturationLabel.Text = $"{msg.Maturation} minutes";
+
+            PotencyLabel.Text = $"{msg.Potency/100f}m";
+
+
+            ChemLabel.Text = $"Contains [color=lime]aiuri[/color]";
 
 
             var name = new FormattedMessage();
