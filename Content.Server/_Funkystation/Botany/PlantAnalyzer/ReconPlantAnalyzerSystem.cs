@@ -1,3 +1,4 @@
+using System.Linq;
 using Content.Server.Botany.Components;
 using Content.Server.PowerCell;
 using Content.Shared.DoAfter;
@@ -176,21 +177,24 @@ public sealed class ReconPlantAnalyzerSystem : EntitySystem
             return;
 
 
-        SeedData? seed = null;
-        if (TryComp<PlantHolderComponent>(plantHolder, out var plantHolderComp))
-            seed = plantHolderComp.Seed;
+        if (TryComp<PlantHolderComponent>(plantHolder, out var plantHolderComp) &&
+            TryComp<ReconPlantAnalyzerComponent>(plantAnalyzer, out var plantAnalyzerComp))
+        {
+            SeedData? seed = plantHolderComp.Seed;
             if (seed != null)
             {
                 _uiSystem.ServerSendUiMessage(plantAnalyzer, ReconPlantAnalyzerUiKey.Key, new PlantAnalyzerUserMessage(
                     GetNetEntity(plantHolder),
-                    1,
+                    plantAnalyzerComp.Version,
                     seed.Production,
                     seed.Maturation,
                     seed.Yield,
                     seed.Potency,
+                    seed.Chemicals.Keys.ToList(),
                     seed.DisplayName));
                 return;
             }
+        }
 
         _uiSystem.ServerSendUiMessage(plantAnalyzer, ReconPlantAnalyzerUiKey.Key, new PlantAnalyzerUserMessage(
             GetNetEntity(plantHolder),
@@ -199,6 +203,7 @@ public sealed class ReconPlantAnalyzerSystem : EntitySystem
             1,
             1,
             1,
+            null,
             "No plant"));
 
     }

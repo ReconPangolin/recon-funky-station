@@ -1,10 +1,11 @@
 using System.Linq;
 using System.Numerics;
+using System.Text;
 using Content.Client.Message;
 using Content.Shared.Atmos;
 using Content.Client.UserInterface.Controls;
 using Content.Shared._Funkystation.Botany.PlantAnalyzer;
-using Content.Shared.Alert;
+using Content.Shared.Chemistry.Reagent;
 using Content.Shared.Damage;
 using Content.Shared.Damage.Prototypes;
 using Content.Shared.FixedPoint;
@@ -69,6 +70,11 @@ namespace Content.Client._Funkystation.Botany.UI
 
             NoPlantDataText.Visible = false;
 
+            var name = new FormattedMessage();
+            name.PushColor(Color.White);
+            name.AddText(Loc.GetString(msg.PlantName));
+            PlantNameLabel.SetMessage(name);
+
 
             YieldLabel.Text = $"{msg.Yield} produce";
 
@@ -79,13 +85,41 @@ namespace Content.Client._Funkystation.Botany.UI
             PotencyLabel.Text = $"{msg.Potency/100f}m";
 
 
-            ChemLabel.Text = $"Contains [color=lime]aiuri[/color]";
+            if (msg is { AnalyzerTier: > 1, ChemsBasic: not null })
+            {
+                var chemString = new StringBuilder("Contains ", 256);
 
+                var addComma = false;
+                foreach (var chemical in msg.ChemsBasic)
+                {
+                    _prototypes.TryIndex<ReagentPrototype>(chemical, out ReagentPrototype? reagent);
 
-            var name = new FormattedMessage();
-            name.PushColor(Color.White);
-            name.AddText(msg.PlantName);
-            PlantNameLabel.SetMessage(name);
+                    if (reagent == null)
+                    {
+                        continue;
+                    }
+
+                    if (!addComma)
+                    {
+                        addComma = true;
+                    }
+                    else
+                    {
+                        chemString.Append(", ");
+                    }
+
+                    chemString.Append($"[color={reagent.SubstanceColor.ToHex()}]{reagent.LocalizedName}[/color]");
+                }
+                chemString.Append(".");
+
+                //ChemLabel.Text = $"Contains [color=lime]aiuri[/color]";
+
+                ChemLabel.Text =  chemString.ToString();
+            }
+            else
+            {
+                ChemLabel.Visible = false;
+            }
 
         }
 

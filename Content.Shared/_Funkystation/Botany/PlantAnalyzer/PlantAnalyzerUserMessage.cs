@@ -11,9 +11,10 @@ public sealed class PlantAnalyzerUserMessage : BoundUserInterfaceMessage
     public float Maturation;
     public int Yield;
     public float Potency;
+    public List<string>? ChemsBasic;
     public string PlantName;
     public PlantAnalyzerUserMessage(NetEntity? targetEntity, int analyzerTier, float production, float maturation,
-        int yield, float potency, string plantName)
+        int yield, float potency, List<string>? chems, string plantName)
     {
         TargetEntity = targetEntity;
         AnalyzerTier = analyzerTier;
@@ -27,7 +28,7 @@ public sealed class PlantAnalyzerUserMessage : BoundUserInterfaceMessage
 
         if (analyzerTier > 1)
         {
-
+            ChemsBasic = chems;
         }
 
         if (analyzerTier > 2)
