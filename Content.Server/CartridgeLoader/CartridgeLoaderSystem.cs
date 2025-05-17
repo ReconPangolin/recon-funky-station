@@ -169,7 +169,7 @@ public sealed class CartridgeLoaderSystem : SharedCartridgeLoaderSystem
 
         foreach (var program in GetInstalled(loaderUid))
         {
-            if (TryComp(program, out CartridgeComponent? installedCartridge) && installedCartridge.ProgramName == loadedCartridge.ProgramName)
+            if (TryComp(program, out CartridgeComponent? installedCartridge) && installedCartridge.ProgramType.Equals(loadedCartridge.ProgramType))
                 return false;
         }
 
