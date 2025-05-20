@@ -94,12 +94,16 @@ public abstract class CartridgeLoaderBoundUserInterface : BoundUserInterface
     private List<(EntityUid, CartridgeComponent)> GetCartridgeComponents(List<EntityUid> programs)
     {
         var components = new List<(EntityUid, CartridgeComponent)>();
+        var addedComponents = new HashSet<LocId>();
 
         foreach (var program in programs)
         {
             var component = RetrieveCartridgeComponent(program);
-            if (component is not null)
+            if (component is not null && !addedComponents.Contains(component.ProgramName))
+            {
                 components.Add((program, component));
+                addedComponents.Add(component.ProgramName);
+            }
         }
 
         return components;

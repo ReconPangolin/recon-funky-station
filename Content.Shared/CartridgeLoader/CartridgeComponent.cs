@@ -34,5 +34,6 @@ public enum InstallationStatus
 {
     Cartridge,
     Installed,
-    Readonly
+    Readonly,
+    Updateable
 }
