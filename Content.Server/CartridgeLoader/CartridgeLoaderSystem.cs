@@ -340,10 +340,23 @@ public sealed class CartridgeLoaderSystem : SharedCartridgeLoaderSystem
         if (args.Container.ID != InstalledContainerId && args.Container.ID != loader.CartridgeSlot.ID)
             return;
 
-        if (TryComp(args.Entity, out CartridgeComponent? cartridge))
-            cartridge.LoaderUid = uid;
+        if (TryComp(args.Entity, out CartridgeComponent? insertedCartridge))
+            insertedCartridge.LoaderUid = uid;
 
-        var version = cartridge?.Version;
+        var version = insertedCartridge?.Version;
+
+        var programs = GetInstalled(uid);
+
+        foreach (var program in programs)
+        {
+            if (TryComp(program, out CartridgeComponent? installedCartridge) &&
+                installedCartridge.InstallationStatus != InstallationStatus.Cartridge &&
+                installedCartridge.ProgramType.Equals(insertedCartridge?.ProgramType) &&
+                installedCartridge.Version < insertedCartridge?.Version)
+            {
+                UpdateCartridgeInstallationStatus(program, InstallationStatus.Updatable, installedCartridge);
+            }
+        }
 
         RaiseLocalEvent(args.Entity, new CartridgeAddedEvent(uid, version));
         base.OnItemInserted(uid, loader, args);
@@ -417,6 +430,9 @@ public sealed class CartridgeLoaderSystem : SharedCartridgeLoaderSystem
             case CartridgeUiMessageAction.UIReady:
                 if (component.ActiveProgram.HasValue)
                     RaiseLocalEvent(component.ActiveProgram.Value, new CartridgeUiReadyEvent(loaderUid));
+                break;
+            case CartridgeUiMessageAction.Update:
+                UninstallProgram(loaderUid, cartridge, component);
                 break;
             default:
                 throw new ArgumentOutOfRangeException($"Unrecognized UI action passed from cartridge loader ui {message.Action}.");

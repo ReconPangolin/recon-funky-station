@@ -85,6 +85,12 @@ public abstract class CartridgeLoaderBoundUserInterface : BoundUserInterface
         SendMessage(message);
     }
 
+    protected void UpdateCartridge(EntityUid cartridgeUid)
+    {
+        var message = new CartridgeLoaderUiMessage(_entManager.GetNetEntity(cartridgeUid), CartridgeUiMessageAction.Update);
+        SendMessage(message);
+    }
+
     protected void UninstallCartridge(EntityUid cartridgeUid)
     {
         var message = new CartridgeLoaderUiMessage(_entManager.GetNetEntity(cartridgeUid), CartridgeUiMessageAction.Uninstall);

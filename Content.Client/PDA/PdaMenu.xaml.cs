@@ -39,6 +39,8 @@ namespace Content.Client.PDA
         public event Action<EntityUid>? OnProgramItemPressed;
         public event Action<EntityUid>? OnUninstallButtonPressed;
         public event Action<EntityUid>? OnInstallButtonPressed;
+        public event Action<EntityUid>? OnUpdateButtonPressed;
+
         public PdaMenu()
         {
             IoCManager.InjectDependencies(this);
@@ -241,6 +243,11 @@ namespace Content.Client.PDA
                         item.InstallButton.Visible = true;
                         item.InstallButton.Text = Loc.GetString("cartridge-bound-user-interface-install-button");
                         item.InstallButton.OnPressed += _ => OnInstallButtonPressed?.Invoke(uid);
+                        break;
+                    case InstallationStatus.Updatable:
+                        item.InstallButton.Visible = true;
+                        item.InstallButton.Text = Loc.GetString("cartridge-bound-user-interface-update-button");
+                        item.InstallButton.OnPressed += _ => OnUpdateButtonPressed?.Invoke(uid);
                         break;
                     case InstallationStatus.Installed:
                         item.InstallButton.Visible = true;
