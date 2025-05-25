@@ -247,6 +247,25 @@ public sealed class CartridgeLoaderSystem : SharedCartridgeLoaderSystem
         return true;
     }
 
+    public bool UpdateProgram(EntityUid loaderUid, EntityUid programUid, CartridgeLoaderComponent? loader = default!)
+    {
+
+        if (!Resolve(loaderUid, ref loader))
+            return false;
+
+        if (!GetInstalled(loaderUid).Contains(programUid))
+            return false;
+
+        if (loader.CartridgeSlot.Item != null)
+        {
+            UninstallProgram(loaderUid, programUid, loader);
+            var prototypeId = Prototype(loader.CartridgeSlot.Item.Value)?.ID;
+            return prototypeId != null && InstallProgram(loaderUid, prototypeId, loader : loader);
+        }
+
+        return false;
+    }
+
     /// <summary>
     /// Activates a program or cartridge and displays its ui fragment. Deactivates any previously active program.
     /// </summary>
@@ -432,7 +451,7 @@ public sealed class CartridgeLoaderSystem : SharedCartridgeLoaderSystem
                     RaiseLocalEvent(component.ActiveProgram.Value, new CartridgeUiReadyEvent(loaderUid));
                 break;
             case CartridgeUiMessageAction.Update:
-                UninstallProgram(loaderUid, cartridge, component);
+                UpdateProgram(loaderUid, cartridge, component);
                 break;
             default:
                 throw new ArgumentOutOfRangeException($"Unrecognized UI action passed from cartridge loader ui {message.Action}.");
