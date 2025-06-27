@@ -17,7 +17,7 @@
                 Text="{Loc plant-analyzer-window-no-plant-data-text}" />
 
             <BoxContainer
-                Name="PatientDataContainer"
+                Name="PlantDataContainer"
                 Margin="0 0 0 5"
                 Orientation="Vertical">
                 <BoxContainer Orientation="Horizontal" Margin="0 0 0 5">
