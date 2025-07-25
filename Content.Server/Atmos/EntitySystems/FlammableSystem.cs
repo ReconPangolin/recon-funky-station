@@ -1,6 +1,49 @@
+// SPDX-FileCopyrightText: 2021 Flipp Syder <76629141+vulppine@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2021 Paul Ritter <ritter.paul1@googlemail.com>
+// SPDX-FileCopyrightText: 2021 Tomeno <Tomeno@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2021 metalgearsloth <comedian_vs_clown@hotmail.com>
+// SPDX-FileCopyrightText: 2021 mirrorcult <lunarautomaton6@gmail.com>
+// SPDX-FileCopyrightText: 2021 pointer-to-null <91910481+pointer-to-null@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2022 Acruid <shatter66@gmail.com>
+// SPDX-FileCopyrightText: 2022 EmoGarbage404 <98561806+EmoGarbage404@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2022 ScalyChimp <72841710+scaly-chimp@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2022 Vera Aguilera Puerto <6766154+Zumorica@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2022 Vera Aguilera Puerto <gradientvera@outlook.com>
+// SPDX-FileCopyrightText: 2022 metalgearsloth <metalgearsloth@gmail.com>
+// SPDX-FileCopyrightText: 2022 wrexbe <81056464+wrexbe@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2023 Chief-Engineer <119664036+Chief-Engineer@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2023 DrSmugleaf <DrSmugleaf@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2023 Kara <lunarautomaton6@gmail.com>
+// SPDX-FileCopyrightText: 2023 Leon Friedrich <60421075+ElectroJr@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2023 Pieter-Jan Briers <pieterjan.briers@gmail.com>
+// SPDX-FileCopyrightText: 2023 Visne <39844191+Visne@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2023 faint <46868845+ficcialfaint@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2023 metalgearsloth <31366439+metalgearsloth@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2023 mhamster <81412348+mhamsterr@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2023 qwerltaz <69696513+qwerltaz@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2024 AJCM-git <60196617+AJCM-git@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2024 Aiden <aiden@djkraz.com>
+// SPDX-FileCopyrightText: 2024 Aidenkrz <aiden@djkraz.com>
+// SPDX-FileCopyrightText: 2024 Arendian <137322659+Arendian@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2024 Ed <96445749+TheShuEd@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2024 Ilya246 <57039557+Ilya246@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2024 Kira Bridgeton <161087999+Verbalase@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2024 LankLTE <135308300+LankLTE@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2024 Nemanja <98561806+EmoGarbage404@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2024 PJBot <pieterjan.briers+bot@gmail.com>
+// SPDX-FileCopyrightText: 2024 Pieter-Jan Briers <pieterjan.briers+git@gmail.com>
+// SPDX-FileCopyrightText: 2024 Tadeo <td12233a@gmail.com>
+// SPDX-FileCopyrightText: 2024 Whisper <121047731+QuietlyWhisper@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2024 deltanedas <39013340+deltanedas@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2024 deltanedas <@deltanedas:kde.org>
+// SPDX-FileCopyrightText: 2025 Tay <td12233a@gmail.com>
+// SPDX-FileCopyrightText: 2025 pa.pecherskij <pa.pecherskij@interfax.ru>
+// SPDX-FileCopyrightText: 2025 taydeo <td12233a@gmail.com>
+//
+// SPDX-License-Identifier: MIT
+
 using Content.Server.Administration.Logs;
 using Content.Server.Atmos.Components;
-using Content.Server.IgnitionSource;
 using Content.Server.Stunnable;
 using Content.Server.Temperature.Components;
 using Content.Server.Temperature.Systems;
@@ -11,6 +54,7 @@ using Content.Shared.Atmos;
 using Content.Shared.Atmos.Components;
 using Content.Shared.Damage;
 using Content.Shared.Database;
+using Content.Shared.IgnitionSource;
 using Content.Shared.Interaction;
 using Content.Shared.Inventory;
 using Content.Shared.Physics;
@@ -23,6 +67,7 @@ using Content.Shared.Timing;
 using Content.Shared.Toggleable;
 using Content.Shared.Weapons.Melee.Events;
 using Content.Shared.FixedPoint;
+using Content.Shared.Hands;
 using Robust.Server.Audio;
 using Robust.Shared.Physics.Components;
 using Robust.Shared.Physics.Events;
@@ -37,7 +82,7 @@ namespace Content.Server.Atmos.EntitySystems
         [Dependency] private readonly AtmosphereSystem _atmosphereSystem = default!;
         [Dependency] private readonly StunSystem _stunSystem = default!;
         [Dependency] private readonly TemperatureSystem _temperatureSystem = default!;
-        [Dependency] private readonly IgnitionSourceSystem _ignitionSourceSystem = default!;
+        [Dependency] private readonly SharedIgnitionSourceSystem _ignitionSourceSystem = default!;
         [Dependency] private readonly DamageableSystem _damageableSystem = default!;
         [Dependency] private readonly AlertsSystem _alertsSystem = default!;
         [Dependency] private readonly FixtureSystem _fixture = default!;
@@ -73,6 +118,7 @@ namespace Content.Server.Atmos.EntitySystems
             SubscribeLocalEvent<FlammableComponent, TileFireEvent>(OnTileFire);
             SubscribeLocalEvent<FlammableComponent, RejuvenateEvent>(OnRejuvenate);
             SubscribeLocalEvent<FlammableComponent, ResistFireAlertEvent>(OnResistFireAlert);
+            Subs.SubscribeWithRelay<FlammableComponent, ExtinguishEvent>(OnExtinguishEvent);
 
             SubscribeLocalEvent<IgniteOnCollideComponent, StartCollideEvent>(IgniteOnCollide);
             SubscribeLocalEvent<IgniteOnCollideComponent, LandEvent>(OnIgniteLand);
@@ -82,6 +128,14 @@ namespace Content.Server.Atmos.EntitySystems
             SubscribeLocalEvent<ExtinguishOnInteractComponent, ActivateInWorldEvent>(OnExtinguishActivateInWorld);
 
             SubscribeLocalEvent<IgniteOnHeatDamageComponent, DamageChangedEvent>(OnDamageChanged);
+        }
+
+        private void OnExtinguishEvent(Entity<FlammableComponent> ent, ref ExtinguishEvent args)
+        {
+            // You know I'm really not sure if having AdjustFireStacks *after* Extinguish,
+            // but I'm just moving this code, not questioning it.
+            Extinguish(ent, ent.Comp);
+            AdjustFireStacks(ent, args.FireStacksAdjustment, ent.Comp);
         }
 
         private void OnMeleeHit(EntityUid uid, IgniteOnMeleeHitComponent component, MeleeHitEvent args)
@@ -315,6 +369,9 @@ namespace Content.Server.Atmos.EntitySystems
 
             _ignitionSourceSystem.SetIgnited(uid, false);
 
+            var extinguished = new ExtinguishedEvent();
+            RaiseLocalEvent(uid, ref extinguished);
+
             UpdateAppearance(uid, flammable);
         }
 
@@ -336,6 +393,9 @@ namespace Content.Server.Atmos.EntitySystems
                 else
                     _adminLogger.Add(LogType.Flammable, $"{ToPrettyString(uid):target} set on fire by {ToPrettyString(ignitionSource):actor}");
                 flammable.OnFire = true;
+
+                var extinguished = new IgnitedEvent();
+                RaiseLocalEvent(uid, ref extinguished);
             }
 
             UpdateAppearance(uid, flammable);

@@ -1,3 +1,12 @@
+// SPDX-FileCopyrightText: 2024 Tadeo <td12233a@gmail.com>
+// SPDX-FileCopyrightText: 2024 metalgearsloth <31366439+metalgearsloth@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2025 Mish <bluscout78@yahoo.com>
+// SPDX-FileCopyrightText: 2025 Tay <td12233a@gmail.com>
+// SPDX-FileCopyrightText: 2025 pa.pecherskij <pa.pecherskij@interfax.ru>
+// SPDX-FileCopyrightText: 2025 taydeo <td12233a@gmail.com>
+//
+// SPDX-License-Identifier: MIT
+
 using Content.Shared.CCVar;
 using Content.Shared.Chemistry.Hypospray.Events;
 using Content.Shared.Climbing.Components;
@@ -106,8 +115,7 @@ public sealed class ClumsySystem : EntitySystem
         // This event is called in shared, thats why it has all the extra prediction stuff.
         var rand = new System.Random((int)_timing.CurTick.Value);
 
-        // If someone is putting you on the table, always get past the guard.
-        if (!_cfg.GetCVar(CCVars.GameTableBonk) && args.PuttingOnTable == ent.Owner && !rand.Prob(ent.Comp.ClumsyDefaultCheck))
+        if (!_cfg.GetCVar(CCVars.GameTableBonk) && !rand.Prob(ent.Comp.ClumsyDefaultCheck))
             return;
 
         //If they're dead don't tablebonk

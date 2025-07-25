@@ -1,3 +1,16 @@
+// SPDX-FileCopyrightText: 2024 Aidenkrz <aiden@djkraz.com>
+// SPDX-FileCopyrightText: 2024 Nemanja <98561806+EmoGarbage404@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2024 Tadeo <td12233a@gmail.com>
+// SPDX-FileCopyrightText: 2024 deltanedas <39013340+deltanedas@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2024 slarticodefast <161409025+slarticodefast@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2024 username <113782077+whateverusername0@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2025 SlamBamActionman <83650252+SlamBamActionman@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2025 Tay <td12233a@gmail.com>
+// SPDX-FileCopyrightText: 2025 pa.pecherskij <pa.pecherskij@interfax.ru>
+// SPDX-FileCopyrightText: 2025 taydeo <td12233a@gmail.com>
+//
+// SPDX-License-Identifier: MIT
+
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Content.Server.Antag.Components;
@@ -111,7 +124,7 @@ public sealed partial class AntagSelectionSystem
         var countOffset = 0;
         foreach (var otherDef in ent.Comp.Definitions)
         {
-            countOffset += Math.Clamp((poolSize - countOffset) / otherDef.PlayerRatio, otherDef.Min, otherDef.Max) * otherDef.PlayerRatio;
+            countOffset += Math.Clamp((poolSize - countOffset) / otherDef.PlayerRatio, otherDef.Min, otherDef.Max) * otherDef.PlayerRatio; // Note: Is the PlayerRatio necessary here? Seems like it can cause issues for defs with varied PlayerRatio.
         }
         // make sure we don't double-count the current selection
         countOffset -= Math.Clamp(poolSize / def.PlayerRatio, def.Min, def.Max) * def.PlayerRatio;
@@ -376,7 +389,8 @@ public sealed partial class AntagSelectionSystem
     /// <summary>
     /// Get all sessions that have been preselected for antag.
     /// </summary>
-    public HashSet<ICommonSession> GetPreSelectedAntagSessions(AntagSelectionComponent? except = null)
+    /// <param name="except">A specific definition to be excluded from the check.</param>
+    public HashSet<ICommonSession> GetPreSelectedAntagSessions(AntagSelectionDefinition? except = null)
     {
         var result = new HashSet<ICommonSession>();
         var query = QueryAllRules();
@@ -385,15 +399,13 @@ public sealed partial class AntagSelectionSystem
             if (HasComp<EndedGameRuleComponent>(uid))
                 continue;
 
-            if (comp == except)
-                continue;
-
-            if (!comp.PreSelectionsComplete)
-                continue;
-
             foreach (var def in comp.Definitions)
             {
-                result.UnionWith(comp.PreSelectedSessions);
+                if (def.Equals(except))
+                    continue;
+
+                if (comp.PreSelectedSessions.TryGetValue(def, out var set))
+                    result.UnionWith(set);
             }
         }
 
@@ -403,7 +415,11 @@ public sealed partial class AntagSelectionSystem
     /// <summary>
     /// Get all sessions that have been preselected for antag and are exclusive, i.e. should not be paired with other antags.
     /// </summary>
-    public HashSet<ICommonSession> GetPreSelectedExclusiveAntagSessions(AntagSelectionComponent? except = null)
+    /// <param name="except">A specific definition to be excluded from the check.</param>
+    // Note: This is a bit iffy since technically this exclusive definition is defined via the MultiAntagSetting, while there's a separately tracked antagExclusive variable in the mindrole.
+    // We can't query that however since there's no guarantee the mindrole has been given out yet when checking pre-selected antags.
+    // I don't think there's any instance where they differ, but it's something to be aware of for a potential future refactor.
+    public HashSet<ICommonSession> GetPreSelectedExclusiveAntagSessions(AntagSelectionDefinition? except = null)
     {
         var result = new HashSet<ICommonSession>();
         var query = QueryAllRules();
@@ -412,17 +428,14 @@ public sealed partial class AntagSelectionSystem
             if (HasComp<EndedGameRuleComponent>(uid))
                 continue;
 
-            if (comp == except)
-                continue;
-
-            if (!comp.PreSelectionsComplete)
-                continue;
-
             foreach (var def in comp.Definitions)
             {
-                if (def.MultiAntagSetting == AntagAcceptability.None)
+                if (def.Equals(except))
+                    continue;
+
+                if (def.MultiAntagSetting == AntagAcceptability.None && comp.PreSelectedSessions.TryGetValue(def, out var set))
                 {
-                    result.UnionWith(comp.PreSelectedSessions);
+                    result.UnionWith(set);
                     break;
                 }
             }

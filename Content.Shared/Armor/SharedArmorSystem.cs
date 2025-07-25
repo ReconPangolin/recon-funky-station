@@ -1,4 +1,14 @@
-﻿using Content.Shared.Damage;
+// SPDX-FileCopyrightText: 2023 Chronophylos <nikolai@chronophylos.com>
+// SPDX-FileCopyrightText: 2023 Nemanja <98561806+EmoGarbage404@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2024 beck-thompson <107373427+beck-thompson@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2025 Tay <td12233a@gmail.com>
+// SPDX-FileCopyrightText: 2025 pa.pecherskij <pa.pecherskij@interfax.ru>
+// SPDX-FileCopyrightText: 2025 slarticodefast <161409025+slarticodefast@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2025 taydeo <td12233a@gmail.com>
+//
+// SPDX-License-Identifier: MIT
+
+using Content.Shared.Damage;
 using Content.Shared.Examine;
 using Content.Shared.Inventory;
 using Content.Shared.Silicons.Borgs;
@@ -51,7 +61,7 @@ public abstract class SharedArmorSystem : EntitySystem
 
     private void OnArmorVerbExamine(EntityUid uid, ArmorComponent component, GetVerbsEvent<ExamineVerb> args)
     {
-        if (!args.CanInteract || !args.CanAccess)
+        if (!args.CanInteract || !args.CanAccess || !component.ShowArmorOnExamine)
             return;
 
         var examineMarkup = GetArmorExamine(component.Modifiers);

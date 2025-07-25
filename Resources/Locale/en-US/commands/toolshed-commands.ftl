@@ -1,3 +1,16 @@
+# SPDX-FileCopyrightText: 2023 AJCM-git <60196617+AJCM-git@users.noreply.github.com>
+# SPDX-FileCopyrightText: 2023 Leon Friedrich <60421075+ElectroJr@users.noreply.github.com>
+# SPDX-FileCopyrightText: 2023 Moony <moony@hellomouse.net>
+# SPDX-FileCopyrightText: 2024 Kara <lunarautomaton6@gmail.com>
+# SPDX-FileCopyrightText: 2024 Nemanja <98561806+EmoGarbage404@users.noreply.github.com>
+# SPDX-FileCopyrightText: 2024 Tadeo <td12233a@gmail.com>
+# SPDX-FileCopyrightText: 2024 slarticodefast <161409025+slarticodefast@users.noreply.github.com>
+# SPDX-FileCopyrightText: 2025 Tay <td12233a@gmail.com>
+# SPDX-FileCopyrightText: 2025 pa.pecherskij <pa.pecherskij@interfax.ru>
+# SPDX-FileCopyrightText: 2025 taydeo <td12233a@gmail.com>
+#
+# SPDX-License-Identifier: MIT
+
 command-description-visualize =
     Takes the input list of entities and puts them into a UI window for easy browsing.
 command-description-runverbas =
@@ -84,3 +97,13 @@ command-description-addaccesslog =
     Adds an access log to this entity. Do note that this bypasses the log's default limit and pause check.
 command-description-stationevent-simulate =
     Simulates N number of rounds in which events will occur and prints the occurrences of every event after.
+command-description-xenoartifact-list =
+    List all EntityUids of spawned artifacts.
+command-description-xenoartifact-printMatrix =
+    Prints out matrix that displays all edges between nodes.
+command-description-xenoartifact-totalResearch =
+    Gets all research points that can be extracted from artifact currently.
+command-description-xenoartifact-averageResearch =
+    Calculates amount of research points average generated xeno artifact will output when fully activated.
+command-description-xenoartifact-unlockAllNodes =
+    Unlocks all nodes of artifact.

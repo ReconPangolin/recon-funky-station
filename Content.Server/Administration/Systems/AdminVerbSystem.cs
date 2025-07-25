@@ -1,3 +1,47 @@
+// SPDX-FileCopyrightText: 2021 20kdc <asdd2808@gmail.com>
+// SPDX-FileCopyrightText: 2021 Javier Guardia Fernández <DrSmugleaf@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2021 Paul Ritter <ritter.paul1@googlemail.com>
+// SPDX-FileCopyrightText: 2021 Pieter-Jan Briers <pieterjan.briers+git@gmail.com>
+// SPDX-FileCopyrightText: 2021 Vera Aguilera Puerto <6766154+Zumorica@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2021 Vera Aguilera Puerto <gradientvera@outlook.com>
+// SPDX-FileCopyrightText: 2021 metalgearsloth <comedian_vs_clown@hotmail.com>
+// SPDX-FileCopyrightText: 2022 Alex Evgrashin <aevgrashin@yandex.ru>
+// SPDX-FileCopyrightText: 2022 Moony <moonheart08@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2022 Nemanja <98561806+EmoGarbage404@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2022 drakewill-CRL <46307022+drakewill-CRL@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2022 eclips_e <67359748+Just-a-Unity-Dev@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2022 mirrorcult <lunarautomaton6@gmail.com>
+// SPDX-FileCopyrightText: 2023 Chief-Engineer <119664036+Chief-Engineer@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2023 DrSmugleaf <DrSmugleaf@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2023 DrSmugleaf <drsmugleaf@gmail.com>
+// SPDX-FileCopyrightText: 2023 Emisse <99158783+Emisse@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2023 Kara <lunarautomaton6@gmail.com>
+// SPDX-FileCopyrightText: 2023 Moony <moony@hellomouse.net>
+// SPDX-FileCopyrightText: 2023 ShadowCommander <10494922+ShadowCommander@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2023 TemporalOroboros <TemporalOroboros@gmail.com>
+// SPDX-FileCopyrightText: 2023 Vigers Ray <60344369+VigersRay@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2023 Ygg01 <y.laughing.man.y@gmail.com>
+// SPDX-FileCopyrightText: 2023 moonheart08 <moonheart08@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2024 Aiden <aiden@djkraz.com>
+// SPDX-FileCopyrightText: 2024 Aidenkrz <aiden@djkraz.com>
+// SPDX-FileCopyrightText: 2024 Leon Friedrich <60421075+ElectroJr@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2024 LordCarve <27449516+LordCarve@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2024 Piras314 <p1r4s@proton.me>
+// SPDX-FileCopyrightText: 2024 Simon <63975668+Simyon264@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2024 SlamBamActionman <83650252+SlamBamActionman@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2024 Tadeo <td12233a@gmail.com>
+// SPDX-FileCopyrightText: 2024 metalgearsloth <31366439+metalgearsloth@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2024 nikthechampiongr <32041239+nikthechampiongr@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2024 no <165581243+pissdemon@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2025 ATDoop <bug@bug.bug>
+// SPDX-FileCopyrightText: 2025 Tay <td12233a@gmail.com>
+// SPDX-FileCopyrightText: 2025 corresp0nd <46357632+corresp0nd@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2025 pa.pecherskij <pa.pecherskij@interfax.ru>
+// SPDX-FileCopyrightText: 2025 slarticodefast <161409025+slarticodefast@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2025 taydeo <td12233a@gmail.com>
+//
+// SPDX-License-Identifier: MIT
+
 using Content.Server.Administration.Logs;
 using Content.Server.Administration.Managers;
 using Content.Server.Administration.UI;
@@ -10,8 +54,6 @@ using Content.Server.Mind;
 using Content.Server.Mind.Commands;
 using Content.Server.Prayer;
 using Content.Server.Station.Systems;
-using Content.Server.Xenoarchaeology.XenoArtifacts;
-using Content.Server.Xenoarchaeology.XenoArtifacts.Triggers.Components;
 using Content.Shared.Administration;
 using Content.Shared.Chemistry.Components.SolutionManager;
 using Content.Shared.Chemistry.EntitySystems;
@@ -55,14 +97,13 @@ namespace Content.Server.Administration.Systems
         [Dependency] private readonly IConsoleHost _console = default!;
         [Dependency] private readonly IAdminManager _adminManager = default!;
         [Dependency] private readonly IGameTiming _gameTiming = default!;
-        [Dependency] private readonly IMapManager _mapManager = default!;
+        [Dependency] private readonly SharedMapSystem _map = default!;
         [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
         [Dependency] private readonly AdminSystem _adminSystem = default!;
         [Dependency] private readonly DisposalTubeSystem _disposalTubes = default!;
         [Dependency] private readonly EuiManager _euiManager = default!;
         [Dependency] private readonly GameTicker _ticker = default!;
         [Dependency] private readonly GhostRoleSystem _ghostRoleSystem = default!;
-        [Dependency] private readonly ArtifactSystem _artifactSystem = default!;
         [Dependency] private readonly UserInterfaceSystem _uiSystem = default!;
         [Dependency] private readonly PrayerSystem _prayerSystem = default!;
         [Dependency] private readonly MindSystem _mindSystem = default!;
@@ -156,12 +197,10 @@ namespace Content.Server.Administration.Systems
 
                             var profile = _ticker.GetPlayerProfile(targetActor.PlayerSession);
                             var mobUid = _spawning.SpawnPlayerMob(coords.Value, null, profile, stationUid);
-                            var targetMind = _mindSystem.GetMind(args.Target);
 
-                            if (targetMind != null)
-                            {
-                                _mindSystem.TransferTo(targetMind.Value, mobUid, true);
-                            }
+                            if (_mindSystem.TryGetMind(args.Target, out var mindId, out var mindComp))
+                                _mindSystem.TransferTo(mindId, mobUid, true, mind: mindComp);
+
                         },
                         ConfirmationPopup = true,
                         Impact = LogImpact.High,
@@ -199,7 +238,7 @@ namespace Content.Server.Administration.Systems
                     });
                 }
 
-                if (_mindSystem.TryGetMind(args.Target, out _, out var mind) && mind.UserId != null)
+                if (_mindSystem.TryGetMind(args.Target, out var mindId, out var mindComp) && mindComp.UserId != null)
                 {
                     // Erase
                     args.Verbs.Add(new Verb
@@ -211,7 +250,7 @@ namespace Content.Server.Administration.Systems
                             new("/Textures/Interface/VerbIcons/delete_transparent.svg.192dpi.png")),
                         Act = () =>
                         {
-                            _adminSystem.Erase(mind.UserId.Value);
+                            _adminSystem.Erase(mindComp.UserId.Value);
                         },
                         Impact = LogImpact.Extreme,
                         ConfirmationPopup = true
@@ -224,10 +263,19 @@ namespace Content.Server.Administration.Systems
                         Category = VerbCategory.Admin,
                         Act = () =>
                         {
-                            _console.ExecuteCommand(player, $"respawn \"{mind.UserId}\"");
+                            _console.ExecuteCommand(player, $"respawn \"{mindComp.UserId}\"");
                         },
                         ConfirmationPopup = true,
                         // No logimpact as the command does it internally.
+                    });
+
+                    // Inspect mind
+                    args.Verbs.Add(new Verb
+                    {
+                        Text = Loc.GetString("inspect-mind-verb-get-data-text"),
+                        Icon = new SpriteSpecifier.Texture(new("/Textures/Interface/VerbIcons/sentient.svg.192dpi.png")),
+                        Category = VerbCategory.Debug,
+                        Act = () => _console.RemoteExecuteCommand(player, $"vv {GetNetEntity(mindId)}"),
                     });
                 }
 
@@ -468,29 +516,6 @@ namespace Content.Server.Administration.Systems
                     ConfirmationPopup = true
                 };
                 args.Verbs.Add(verb);
-            }
-
-            // XenoArcheology
-            if (_adminManager.IsAdmin(player) && TryComp<ArtifactComponent>(args.Target, out var artifact))
-            {
-                // make artifact always active (by adding timer trigger)
-                args.Verbs.Add(new Verb()
-                {
-                    Text = Loc.GetString("artifact-verb-make-always-active"),
-                    Category = VerbCategory.Debug,
-                    Act = () => EntityManager.AddComponent<ArtifactTimerTriggerComponent>(args.Target),
-                    Disabled = EntityManager.HasComponent<ArtifactTimerTriggerComponent>(args.Target),
-                    Impact = LogImpact.High
-                });
-
-                // force to activate artifact ignoring timeout
-                args.Verbs.Add(new Verb()
-                {
-                    Text = Loc.GetString("artifact-verb-activate"),
-                    Category = VerbCategory.Debug,
-                    Act = () => _artifactSystem.ForceActivateArtifact(args.Target, component: artifact),
-                    Impact = LogImpact.High
-                });
             }
 
             // Make Sentient verb

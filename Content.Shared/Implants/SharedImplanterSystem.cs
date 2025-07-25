@@ -1,3 +1,21 @@
+// SPDX-FileCopyrightText: 2022 keronshb <54602815+keronshb@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2023 Bakke <luringens@protonmail.com>
+// SPDX-FileCopyrightText: 2023 DrSmugleaf <DrSmugleaf@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2023 Leon Friedrich <60421075+ElectroJr@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2023 TemporalOroboros <TemporalOroboros@gmail.com>
+// SPDX-FileCopyrightText: 2023 Vordenburg <114301317+Vordenburg@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2023 deltanedas <39013340+deltanedas@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2023 metalgearsloth <31366439+metalgearsloth@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2023 themias <89101928+themias@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2024 Plykiya <58439124+Plykiya@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2024 Tayrtahn <tayrtahn@gmail.com>
+// SPDX-FileCopyrightText: 2025 Skye <57879983+Rainbeon@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2025 Tay <td12233a@gmail.com>
+// SPDX-FileCopyrightText: 2025 slarticodefast <161409025+slarticodefast@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2025 taydeo <td12233a@gmail.com>
+//
+// SPDX-License-Identifier: MIT
+
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Content.Shared.Containers.ItemSlots;
@@ -211,7 +229,7 @@ public abstract class SharedImplanterSystem : EntitySystem
                         continue;
                     }
 
-                    DrawImplantIntoImplanter(implanter, target, implant, implantContainer, implanterContainer, implantComp);
+                    DrawImplantIntoImplanter(implanter, target, implant, implantContainer, implanterContainer, implantComp, component);
                     permanentFound = implantComp.Permanent;
 
                     //Break so only one implant is drawn
@@ -246,11 +264,11 @@ public abstract class SharedImplanterSystem : EntitySystem
                     }
                     else
                     {
-                        DrawImplantIntoImplanter(implanter, target, implant.Value, implantContainer, implanterContainer, implantComp);
+                        DrawImplantIntoImplanter(implanter, target, implant.Value, implantContainer, implanterContainer, implantComp, component);
                         permanentFound = implantComp.Permanent;
                     }
 
-                    if (component.CurrentMode == ImplanterToggleMode.Draw && !component.ImplantOnly && !permanentFound)
+                    if (component.CurrentMode == ImplanterToggleMode.Draw && !component.ImplantOnly && !permanentFound && !component.DeimplantCrushes)
                         ImplantMode(implanter, component);
                 }
                 else
@@ -277,11 +295,13 @@ public abstract class SharedImplanterSystem : EntitySystem
         _popup.PopupEntity(failedPermanentMessage, target, user);
     }
 
-    private void DrawImplantIntoImplanter(EntityUid implanter, EntityUid target, EntityUid implant, BaseContainer implantContainer, ContainerSlot implanterContainer, SubdermalImplantComponent implantComp)
+    private void DrawImplantIntoImplanter(EntityUid implanter, EntityUid target, EntityUid implant, BaseContainer implantContainer, ContainerSlot implanterContainer, SubdermalImplantComponent implantComp, ImplanterComponent implanterComp)
     {
         _container.Remove(implant, implantContainer);
         implantComp.ImplantedEntity = null;
-        _container.Insert(implant, implanterContainer);
+
+        if (!implanterComp.DeimplantCrushes)
+            _container.Insert(implant, implanterContainer);
 
         var ev = new TransferDnaEvent { Donor = target, Recipient = implanter };
         RaiseLocalEvent(target, ref ev);
